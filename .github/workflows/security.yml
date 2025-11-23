@@ -8,16 +8,20 @@ on:
 jobs:
   security:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout source code
       - name: Checkout Repo
         uses: actions/checkout@v3
 
+      # 2. Setup Java (required for SonarQube)
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: 'temurin'   # bisa juga 'zulu' atau 'adopt'
           java-version: '11'
 
+      # 3. Run SonarQube SAST scan
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
@@ -29,6 +33,7 @@ jobs:
             -Dsonar.host.url=http://localhost:9000
             -Dsonar.login=$SONAR_TOKEN
 
+      # 4. Run OWASP ZAP DAST scan
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.7.0
         with:
