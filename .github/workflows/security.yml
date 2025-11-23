@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source code
+      # Checkout source code
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      # 2. Setup Java (required for SonarQube)
+      # Setup Java
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'   # bisa juga 'zulu' atau 'adopt'
+          distribution: 'temurin'
           java-version: '11'
 
-      # 3. Run SonarQube SAST scan
-      - name: SonarQube Scan
+      # SonarCloud SAST scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -30,10 +30,11 @@ jobs:
           projectBaseDir: .
           args: >
             -Dsonar.projectKey=antrian-web
-            -Dsonar.host.url=http://localhost:9000
+            -Dsonar.organization=<organization_key>
+            -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.login=$SONAR_TOKEN
 
-      # 4. Run OWASP ZAP DAST scan
+      # OWASP ZAP DAST scan
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.7.0
         with:
