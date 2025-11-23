@@ -20,10 +20,14 @@ jobs:
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: .
-          projectKey: antrian-web
-          login: ${{ secrets.SONAR_TOKEN }}
+          args: >
+            -Dsonar.projectKey=antrian-web
+            -Dsonar.host.url=http://localhost:9000
+            -Dsonar.login=$SONAR_TOKEN
 
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.7.0
